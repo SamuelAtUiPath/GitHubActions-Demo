@@ -1,7 +1,7 @@
 name: Caller
 
 on:
-  pull_request:
+  push:
     branches:
       - test
       - prod
