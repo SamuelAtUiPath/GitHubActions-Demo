@@ -37,6 +37,6 @@ jobs:
     needs: echo-environment-name
     uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/called-pipeline.yml@main
     with:
-      PROJECT_JSON_PATH: GitHubActions\project.json
+      PROJECT_JSON_PATH: GitHubActions-Demo\project.json
       TENANT_NAME: ${{ needs.echo-environment-name.outputs.tenant_name }}
     secrets: inherit
