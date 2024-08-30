@@ -39,4 +39,4 @@ jobs:
     with:
       PROJECT_JSON_PATH: GitHubActions\project.json
       TENANT_NAME: ${{ needs.echo-environment-name.outputs.tenant_name }}
-    secrets: inherit
+      secrets: inherit
