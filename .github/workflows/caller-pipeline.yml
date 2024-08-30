@@ -1,0 +1,42 @@
+name: Caller
+
+on:
+  push:
+    branches:
+      - test
+      - prod
+  pull_request:
+    branches:
+      - test
+      - prod
+
+  workflow_dispatch:
+
+jobs:
+  echo-environment-name:
+    runs-on: ubuntu-latest
+    outputs:
+      tenant_name: ${{ steps.set-tenant-name.outputs.tenant_name }}
+    steps:
+      - name: Set TENANT_NAME based on branch
+        id: set-tenant-name
+        run: |
+          if [[ "${{ github.ref_name }}" == "test" ]]; then
+            echo "TENANT_NAME=Mars" >> $GITHUB_ENV
+            echo "::set-output name=tenant_name::Mars"
+          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
+            echo "TENANT_NAME=Jupiter" >> $GITHUB_ENV
+            echo "::set-output name=tenant_name::Jupiter"
+          fi
+
+      - name: Show environment name
+        run: |
+          echo "Environment: ${{ github.ref_name }}"
+
+  call-central-pipeline:
+    needs: echo-environment-name
+    uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/called-pipeline.yml@main
+    with:
+      PROJECT_JSON_PATH: GitHubActions\project.json
+      TENANT_NAME: ${{ needs.echo-environment-name.outputs.tenant_name }}
+    secrets: inherit
